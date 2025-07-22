@@ -1,10 +1,10 @@
-ï»¿//Academy
+//Academy
 #include <iostream>
 
 using namespace std;
 
-#define HUMAN_TAKE_PARAMETRS const std::string& last_name, const std::string& first_name, int age
-#define HUMAN_GIVE_PARAMETRS  last_name, first_name, age
+//#define HUMAN_TAKE_PARAMETRS const std::string& last_name, const std::string& first_name, int age
+//#define HUMAN_GIVE_PARAMETRS  last_name, first_name, age
 
 class Human
 {
@@ -38,7 +38,7 @@ public:
 	}
 
 	//Constructor
-	Human(HUMAN_TAKE_PARAMETRS)
+	/*Human(HUMAN_TAKE_PARAMETRS)
 	{
 		set_last_name(last_name);
 		set_first_name(first_name);
@@ -48,7 +48,7 @@ public:
 	~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
-	}
+	}*/
 
 	//Methods
 	void info()const
@@ -57,8 +57,8 @@ public:
 	}
 };
 
-#define STUDENT_TAKE_PARAMETRS const std::string& spesiality, const std::string& group, double rating, double attendance
-#define STUDENT_GIVE_PARAMETRS spesiality,group, rating, attendance
+//#define STUDENT_TAKE_PARAMETRS const std::string& spesiality, const std::string& group, double rating, double attendance
+//#define STUDENT_GIVE_PARAMETRS spesiality,group, rating, attendance
 
 class Student :public Human
 {
@@ -100,8 +100,8 @@ public:
 		this->attendance = attendance;
 	}
 
-		//Constructor
-	Student(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS):Human(HUMAN_GIVE_PARAMETRS)
+	//Constructor
+	/*Student(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS) :Human(HUMAN_GIVE_PARAMETRS)
 	{
 		set_speciality(spesiality);
 		set_group(group);
@@ -110,9 +110,9 @@ public:
 		cout << "SContructor:\t" << this << endl;
 	}
 	~Student()
-	{		
+	{
 		cout << "SDestructor:\t" << this << endl;
-	}
+	}*/
 
 	//Methods
 	void info()const
@@ -122,8 +122,8 @@ public:
 	}
 };
 
-#define GRADUATE_TAKE_PARAMETRS const std::string& topic_of_graduation_project, int practice_mark, int final_exam_mark, int graduation_mark
-#define GRADUATE_GIVE_PARAMETRS topic_of_graduation_project, practice_mark, final_exam_mark, graduation_mark
+//#define GRADUATE_TAKE_PARAMETRS const std::string& topic_of_graduation_project, int practice_mark, int final_exam_mark, int graduation_mark
+//#define GRADUATE_GIVE_PARAMETRS topic_of_graduation_project, practice_mark, final_exam_mark, graduation_mark
 
 class Graduate:public Student
 {
@@ -164,37 +164,37 @@ public:
 	{
 		this->graduation_mark = graduation_mark;
 	}
-		 
-	//Constructor
-	Graduate(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS, GRADUATE_TAKE_PARAMETRS):Student(HUMAN_GIVE_PARAMETRS, STUDENT_GIVE_PARAMETRS)
-	{
-		set_topic_of_graduation_project(topic_of_graduation_project);
-		set_practice_mark(practice_mark);
-		set_final_exam_mark(final_exam_mark);
-		set_graduation_mark(graduation_mark);
-		cout << "GContructor:\t" << this << endl;
-	}
-	~Graduate()
-	{
-		cout << "GDestructor:\t" << this << endl;
-	}
+
+	////Constructor
+	//Graduate(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS, GRADUATE_TAKE_PARAMETRS) :Student(HUMAN_GIVE_PARAMETRS, STUDENT_GIVE_PARAMETRS)
+	//{
+	//	set_topic_of_graduation_project(topic_of_graduation_project);
+	//	set_practice_mark(practice_mark);
+	//	set_final_exam_mark(final_exam_mark);
+	//	set_graduation_mark(graduation_mark);
+	//	cout << "GContructor:\t" << this << endl;
+	//}
+	//~Graduate()
+	//{
+	//	cout << "GDestructor:\t" << this << endl;
+	//}
 
 	//Methods
 	void info()const
 	{
 		Student::info();
-		cout << "Ð¢ÐµÐ¼Ð° Ð´Ð¸Ð¿Ð»Ð¾Ð¼Ð½Ð¾Ð³Ð¾ Ð¿Ñ€Ð¾ÐµÐºÑ‚Ð°: " << topic_of_graduation_project << "\n"
-			 << "ÐžÑ†ÐµÐ½ÐºÐ° Ð·Ð° Ð¿Ñ€Ð°ÐºÑ‚Ð¸ÐºÑƒ: " << practice_mark << "\n"
-			 << "ÐžÑ†ÐµÐ½ÐºÐ° Ð·Ð° Ð³Ð¾Ñ. ÑÐºÐ·Ð°Ð¼ÐµÐ½: " << final_exam_mark << "\n"
-			 << "ÐžÑ†ÐµÐ½ÐºÐ° Ð·Ð° Ð´Ð¸Ð¿Ð»Ð¾Ð¼Ð½Ñ‹Ð¹ Ð¿Ñ€Ð¾ÐµÐºÑ‚: " << graduation_mark << endl;
+		cout << "Òåìà äèïëîìíîãî ïðîåêòà: " << topic_of_graduation_project << "\n"
+			<< "Îöåíêà çà ïðàêòèêó: " << practice_mark << "\n"
+			<< "Îöåíêà çà ãîñ. ýêçàìåí: " << final_exam_mark << "\n"
+			<< "Îöåíêà çà äèïëîìíûé ïðîåêò: " << graduation_mark << endl;
 	}
 };
 
 
-#define TEACHER_TAKE_PARAMETRS const std::string& speciality, int experience
-#define TEACHER_GIVE_PARAMETRS speciality, experience
+//#define TEACHER_TAKE_PARAMETRS const std::string& speciality, int experience
+//#define TEACHER_GIVE_PARAMETRS speciality, experience
 
-class Teacher:public Human
+class Teacher :public Human
 {
 	std::string speciality;
 	int experience;
@@ -217,7 +217,7 @@ public:
 	}
 
 	//Constructors
-	Teacher( HUMAN_TAKE_PARAMETRS, TEACHER_TAKE_PARAMETRS ):Human(HUMAN_GIVE_PARAMETRS)
+	/*Teacher(HUMAN_TAKE_PARAMETRS, TEACHER_TAKE_PARAMETRS) :Human(HUMAN_GIVE_PARAMETRS)
 	{
 		set_speciality(speciality);
 		set_expirience(experience);
@@ -226,7 +226,7 @@ public:
 	~Teacher()
 	{
 		cout << "TDestructor:\t" << this << endl;
-	}
+	}*/
 
 	//Methods
 	void info()const
@@ -240,15 +240,15 @@ void main()
 {
 	setlocale(LC_ALL, "");
 
-	//Human human("Montana", "Antonio", 25);
-	//human.info();
-	//
-	//Student student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98);
-	//student.info();
-
-	//Teacher teacher("Pin", "Jes", 50, "Chemistry", 25);
-	//teacher.info();
+	Human human("Montana", "Antonio", 25);
+	human.info();
 	
+	/*Student student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98);
+	student.info();
+
+	Teacher teacher("Pin", "Jes", 50, "Chemistry", 25);
+	teacher.info();
+
 	Graduate graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrite fertilizers", 5, 5, 5);
 	graduate.info();
-}
+}*/
