@@ -3,6 +3,8 @@
 
 using namespace std;
 
+#define delimiter "\n---------------------------------------\n"
+
 #define HUMAN_TAKE_PARAMETRS const std::string& last_name, const std::string& first_name, int age
 #define HUMAN_GIVE_PARAMETRS  last_name, first_name, age
 
@@ -45,13 +47,13 @@ public:
 		set_age(age);
 		cout << "HConstructor:\t" << this << endl;
 	}
-	~Human()
+	virtual ~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
 	}
 
 	//Methods
-	void info()const
+	virtual void info()const
 	{
 		cout << last_name << " " << first_name << " " << age << endl;
 	}
@@ -100,8 +102,8 @@ public:
 		this->attendance = attendance;
 	}
 
-		//Constructor
-	Student(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS):Human(HUMAN_GIVE_PARAMETRS)
+	//Constructor
+	Student(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS) :Human(HUMAN_GIVE_PARAMETRS)
 	{
 		set_speciality(spesiality);
 		set_group(group);
@@ -110,12 +112,12 @@ public:
 		cout << "SContructor:\t" << this << endl;
 	}
 	~Student()
-	{		
+	{
 		cout << "SDestructor:\t" << this << endl;
 	}
 
 	//Methods
-	void info()const
+	void info()const override
 	{
 		Human::info();
 		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
@@ -125,7 +127,7 @@ public:
 #define GRADUATE_TAKE_PARAMETRS const std::string& topic_of_graduation_project, int practice_mark, int final_exam_mark, int graduation_mark
 #define GRADUATE_GIVE_PARAMETRS topic_of_graduation_project, practice_mark, final_exam_mark, graduation_mark
 
-class Graduate:public Student
+class Graduate :public Student
 {
 	std::string topic_of_graduation_project;
 	int practice_mark;
@@ -164,9 +166,9 @@ public:
 	{
 		this->graduation_mark = graduation_mark;
 	}
-		 
+
 	//Constructor
-	Graduate(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS, GRADUATE_TAKE_PARAMETRS):Student(HUMAN_GIVE_PARAMETRS, STUDENT_GIVE_PARAMETRS)
+	Graduate(HUMAN_TAKE_PARAMETRS, STUDENT_TAKE_PARAMETRS, GRADUATE_TAKE_PARAMETRS) :Student(HUMAN_GIVE_PARAMETRS, STUDENT_GIVE_PARAMETRS)
 	{
 		set_topic_of_graduation_project(topic_of_graduation_project);
 		set_practice_mark(practice_mark);
@@ -180,13 +182,13 @@ public:
 	}
 
 	//Methods
-	void info()const
+	void info()const override
 	{
 		Student::info();
 		cout << "Тема дипломного проекта: " << topic_of_graduation_project << "\n"
-			 << "Оценка за практику: " << practice_mark << "\n"
-			 << "Оценка за гос. экзамен: " << final_exam_mark << "\n"
-			 << "Оценка за дипломный проект: " << graduation_mark << endl;
+			<< "Оценка за практику: " << practice_mark << "\n"
+			<< "Оценка за гос. экзамен: " << final_exam_mark << "\n"
+			<< "Оценка за дипломный проект: " << graduation_mark << endl;
 	}
 };
 
@@ -194,7 +196,7 @@ public:
 #define TEACHER_TAKE_PARAMETRS const std::string& speciality, int experience
 #define TEACHER_GIVE_PARAMETRS speciality, experience
 
-class Teacher:public Human
+class Teacher :public Human
 {
 	std::string speciality;
 	int experience;
@@ -217,7 +219,7 @@ public:
 	}
 
 	//Constructors
-	Teacher( HUMAN_TAKE_PARAMETRS, TEACHER_TAKE_PARAMETRS ):Human(HUMAN_GIVE_PARAMETRS)
+	Teacher(HUMAN_TAKE_PARAMETRS, TEACHER_TAKE_PARAMETRS) :Human(HUMAN_GIVE_PARAMETRS)
 	{
 		set_speciality(speciality);
 		set_expirience(experience);
@@ -229,26 +231,55 @@ public:
 	}
 
 	//Methods
-	void info()const
+	void info()const override
 	{
 		Human::info();
 		cout << speciality << " " << experience << endl;
 	}
 };
 
+//#define INHERITANCE
+#define POLYMORPHISM
+
 void main()
 {
 	setlocale(LC_ALL, "");
 
+#ifdef INHERITANCE
 	//Human human("Montana", "Antonio", 25);
-	//human.info();
-	//
-	//Student student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98);
-	//student.info();
+//human.info();
+//
+//Student student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98);
+//student.info();
 
-	//Teacher teacher("Pin", "Jes", 50, "Chemistry", 25);
-	//teacher.info();
-	
+//Teacher teacher("Pin", "Jes", 50, "Chemistry", 25);
+//teacher.info();
+
 	Graduate graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrite fertilizers", 5, 5, 5);
 	graduate.info();
+#endif // INHERITANCE
+
+#ifdef POLYMORPHISM
+	Human* group[] =
+	{
+		new Student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98),
+		new Teacher("Pin", "Jes", 50, "Chemistry", 25),
+		new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrite fertilizers", 5, 5, 5),
+		new Student("Jonh", "Coner", 30, "Chemistry", "WW_220", 95, 98),
+		new Teacher("Pinoc", "DjJes", 50, "Chemistry", 20)
+	};
+
+	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		group[i]->info();
+		cout << delimiter << endl;
+	}
+	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
+	{
+		delete group[i];
+		cout << delimiter << endl;
+	}
+
+#endif // POLYMORPHISM
+
 }
