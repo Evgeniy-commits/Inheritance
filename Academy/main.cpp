@@ -55,15 +55,15 @@ public:
 	}
 
 	//Methods
-	virtual void info()const
+	virtual std::ostream& info(std::ostream& os)const
 	{
-		cout << last_name << " " << first_name << " " << age << endl;
+		return os << last_name << " " << first_name << " " << age;
 	}
 };
 
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
-	return os << obj.get_last_name() << " " << obj.get_first_name() << " " << obj.get_age();
+	return obj.info(os);
 }
 
 #define STUDENT_TAKE_PARAMETRS const std::string& spesiality, const std::string& group, double rating, double attendance
@@ -124,10 +124,9 @@ public:
 	}
 
 	//Methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Human::info();
-		cout << speciality << " " << group << " " << rating << " " << attendance << endl;
+		return Human::info(os) << " " << speciality << " " << group << " " << rating << " " << attendance;
 	}
 };
 
@@ -189,13 +188,13 @@ public:
 	}
 
 	//Methods
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Student::info();
-		cout << "Тема дипломного проекта: " << topic_of_graduation_project << "\n"
+		return Student::info(os) << "\n"
+			<< "Тема дипломного проекта: " << topic_of_graduation_project << "\n"
 			<< "Оценка за практику: " << practice_mark << "\n"
 			<< "Оценка за гос. экзамен: " << final_exam_mark << "\n"
-			<< "Оценка за дипломный проект: " << graduation_mark << endl;
+			<< "Оценка за дипломный проект: " << graduation_mark;
 	}
 };
 
@@ -238,10 +237,9 @@ public:
 	}
 
 	//Methods
-	void info()const override
+	std::ostream& info(std::ostream& os) const override
 	{
-		Human::info();
-		cout << speciality << " " << experience << endl;
+		return Human::info(os) << speciality << " " << experience;
 	}
 };
 
@@ -279,7 +277,7 @@ void main()
 	std::ofstream fout("group.txt");
 	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
 	{	
-		group[i]->info();
+		group[i]->info(cout);
 		fout << *group[i] << endl;
 		cout << delimiter << endl;
 	}
