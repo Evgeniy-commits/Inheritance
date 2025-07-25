@@ -284,6 +284,8 @@ void main()
 		cout << delimiter << endl;
 	}
 	fout.close();
+
+
 	system("notepad group.txt");
 	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
 	{
