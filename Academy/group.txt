@@ -1,5 +1,5 @@
-Pincman Jessie 22
-Pin Jes 50
-Sara Coner 25
-Jonh Coner 30
-Pinoc DjJes 50
+Pincman Jessie 22 Chemistry Chemistry 95 98
+Pin Jes 50 Chemistry 25
+Sara Coner 25 Chemistry Chemistry 95 98 nitrite fertilizers 5 5 5
+Jonh Coner 30 Chemistry Chemistry 95 98
+Pinoc DjJes 50 Chemistry 20
