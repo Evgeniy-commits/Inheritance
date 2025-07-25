@@ -49,7 +49,7 @@ void main()
 		std::cerr << "Error: File not found" << endl;
 	}
 
-	//?. Закрываем поток:
+	//4. Закрываем поток:
 	fin.close();
 
 
