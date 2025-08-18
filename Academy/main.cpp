@@ -305,8 +305,46 @@ void Save(Human* group[], const int n, const std::string& filename)
 	cmd += filename;
 	system(cmd.c_str());
 }
+
+void Clear(Human* group[], const int n)
+{
+	for (int i(0); i < n; i++)
+	{
+		delete group[i];
+		cout << delimiter << endl;
+	}
+}
+
+Human** Load(const std::string& filename, int& n)
+{
+	Human** group = nullptr;
+	std::ifstream fin(filename);
+	if (fin.is_open())
+	{
+		n = 0;
+		std::string buffer;
+		while (!fin.eof())
+		{
+			std::getline(fin, buffer);
+			if (buffer.size() < 20) continue;
+			n++;
+		}
+		cout << "Количество объектов: " << n << endl;
+		group = new Human* [n];
+		cout << "Position " << fin.tellg() << endl;
+		fin.clear();
+		fin.seekg(0);
+
+	}
+	else
+	{
+		std::cerr << "Error: file not found" << endl;
+	}
+
+}
 //#define INHERITANCE
-#define POLYMORPHISM
+//#define POLYMORPHISM
+
 
 void main()
 {
@@ -348,4 +386,7 @@ void main()
 
 #endif // POLYMORPHISM
 
+	Human** group = Load("group.txt", n);
+	Print(group, n);
+	Clear(group, n);
 }
