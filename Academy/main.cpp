@@ -281,6 +281,30 @@ public:
 	}
 };
 
+
+void Print(Human* group[], const int n)
+{
+	for (int i(0); i < n; i++)
+	{
+		group[i]->info(cout);
+		cout << delimiter << endl;
+	}
+	cout << "Количество объектов: " << group[0]->get_count() << endl;
+	cout << "Количество объектов: " << Human::get_count() << endl;
+}
+
+void Save(Human* group[], const int n, const std::string& filename)
+{
+	std::ofstream fout(filename);
+	for (int i(0); i < n; i++)
+	{
+		fout << *group[i] << endl;
+	}
+	fout.close();
+	std::string cmd = "notepad ";
+	cmd += filename;
+	system(cmd.c_str());
+}
 //#define INHERITANCE
 #define POLYMORPHISM
 
@@ -312,17 +336,10 @@ void main()
 		new Teacher("Pinoc", "DjJes", 50, "Chemistry", 20)
 	};
 
-	std::ofstream fout("group.txt");
-	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
-	{	
-		group[i]->info(cout);
-		fout << *group[i] << endl;
-		cout << delimiter << endl;
-	}
-	cout << "Количество объектов: " << group[0]->get_count() << endl;
-	cout << "Количество объектов: " << Human::get_count() << endl;
-	fout.close();
-	system("notepad group.txt");
+	Print(group, sizeof(group) / sizeof(group[0]));
+	Save(group, sizeof(group) / sizeof(group[0]), "group.txt");
+	
+
 	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
 	{
 		delete group[i];
