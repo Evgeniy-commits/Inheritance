@@ -1,9 +1,6 @@
-Pincman Jessie 22 Chemistry WW_220 95 98
-Pin Jes 50Chemistry 25
-Sara Coner 25 Chemistry WW_520 95 98
-Тема дипломного проекта: nitrite fertilizers
-Оценка за практику: 5
-Оценка за гос. экзамен: 5
-Оценка за дипломный проект: 5
-Jonh Coner 30 Chemistry WW_220 95 98
-Pinoc DjJes 50Chemistry 20
+Student:    Pincman     Jessie      22   Chemistry             WW_220  95      98      
+Teacher:    Pin         Jes         50   Chemistry                       25                    
+Graduate:   Sara        Coner       25   Chemistry             WW_520  95      98      
+nitrite fertilizers555
+Student:    Jonh        Coner       30   Chemistry             WW_220  95      98      
+Teacher:    Pinoc       DjJes       50   Chemistry                       20                    

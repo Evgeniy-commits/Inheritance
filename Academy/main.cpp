@@ -12,10 +12,18 @@ using namespace std;
 
 class Human
 {
+	static const int TYPE_WIDTH = 12;
+	static const int NAME_WIDTH = 12;
+	static const int AGE_WIDTH = 5;
+	static int count;
 	std::string last_name;
 	std::string first_name;
 	int age;
 public:
+	static int get_count()
+	{
+		return count;
+	}
 	const std::string& get_last_name()const
 	{
 		return last_name;
@@ -48,19 +56,32 @@ public:
 		set_first_name(first_name);
 		set_age(age);
 		cout << "HConstructor:\t" << this << endl;
+		count++;
 	}
 	virtual ~Human()
 	{
 		cout << "HDestructor:\t" << this << endl;
+		count--;
 	}
 
 	//Methods
 	virtual std::ostream& info(std::ostream& os)const
 	{
-		return os << last_name << " " << first_name << " " << age;
+		//return os << last_name << " " << first_name << " " << age;
+		os.width(TYPE_WIDTH);
+		os << std::left;
+		os << std::string(strchr(typeid(*this).name(), ' ') + 1) + ":";
+		os.width(NAME_WIDTH);
+		os << last_name;
+		os.width(NAME_WIDTH);
+		os << first_name;
+		os.width(AGE_WIDTH);
+		os << age;
+		return os;
 	}
 };
 
+int Human::count = 0;
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
 	return obj.info(os);
@@ -71,6 +92,9 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 
 class Student :public Human
 {
+	static const int SPECIALITY_WIDTH = 32;
+	static const int GROUP_WIDTH = 8;
+	static const int RAT_WIDTH = 8;
 	std::string speciality;
 	std::string group;
 	double rating;
@@ -126,7 +150,17 @@ public:
 	//Methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		return Human::info(os) << " " << speciality << " " << group << " " << rating << " " << attendance;
+		//return Human::info(os) << " " << speciality << " " << group << " " << rating << " " << attendance;
+		Human::info(os);
+		os.width(SPECIALITY_WIDTH);
+		os << speciality;
+		os.width(GROUP_WIDTH);
+		os << group;
+		os.width(RAT_WIDTH);
+		os << rating;
+		os.width(RAT_WIDTH);
+		os << attendance;
+		return os;
 	}
 };
 
@@ -190,11 +224,7 @@ public:
 	//Methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		return Student::info(os) << "\n"
-			<< "Тема дипломного проекта: " << topic_of_graduation_project << "\n"
-			<< "Оценка за практику: " << practice_mark << "\n"
-			<< "Оценка за гос. экзамен: " << final_exam_mark << "\n"
-			<< "Оценка за дипломный проект: " << graduation_mark;
+		return Student::info(os) << topic_of_graduation_project << " " << practice_mark << " " << final_exam_mark << " " << graduation_mark;
 	}
 };
 
@@ -204,6 +234,8 @@ public:
 
 class Teacher :public Human
 {
+	static const int SPECIALITY_WIDTH = 32;
+	static const int EXPIRIENCE_WIDTH = 22;
 	std::string speciality;
 	int experience;
 public:
@@ -239,7 +271,13 @@ public:
 	//Methods
 	std::ostream& info(std::ostream& os) const override
 	{
-		return Human::info(os) << speciality << " " << experience;
+		//return Human::info(os) << speciality << " " << experience;
+		Human::info(os);
+		os.width(SPECIALITY_WIDTH);
+		os << speciality;
+		os.width(EXPIRIENCE_WIDTH);
+		os << experience;
+		return os;
 	}
 };
 
@@ -281,9 +319,9 @@ void main()
 		fout << *group[i] << endl;
 		cout << delimiter << endl;
 	}
+	cout << "Количество объектов: " << group[0]->get_count() << endl;
+	cout << "Количество объектов: " << Human::get_count() << endl;
 	fout.close();
-
-
 	system("notepad group.txt");
 	for (int i(0); i < sizeof(group) / sizeof(group[0]); i++)
 	{
