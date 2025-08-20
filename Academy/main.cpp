@@ -79,12 +79,22 @@ public:
 		os << age;
 		return os;
 	}
+
+	virtual std::istream& scan(std::istream& is)
+	{
+		return is >> last_name >> first_name >> age;
+	}
 };
 
 int Human::count = 0;
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
 	return obj.info(os);
+}
+
+std::istream& operator>>(std::istream& is, Human& obj)
+{
+	return obj.scan(is);
 }
 
 #define STUDENT_TAKE_PARAMETRS const std::string& spesiality, const std::string& group, double rating, double attendance
@@ -162,6 +172,21 @@ public:
 		os << attendance;
 		return os;
 	}
+
+	std::istream& scan(std::istream& is) override
+	{
+		Human::scan(is);
+		char sz_buffer[SPECIALITY_WIDTH + 1] = {};
+		is.read(sz_buffer, SPECIALITY_WIDTH);
+		for (int i = SPECIALITY_WIDTH - 1; sz_buffer[i] == ' '; i--) sz_buffer[i] = 0;
+		
+		while (sz_buffer[0] == ' ')
+			for (int i = 0; sz_buffer[i]; i++) sz_buffer[i] = sz_buffer[i + 1];
+		
+		speciality = sz_buffer; //сохраняем специальность в соотв. поле
+		is >> group >> rating >> attendance;
+		return is;
+	}
 };
 
 #define GRADUATE_TAKE_PARAMETRS const std::string& topic_of_graduation_project, int practice_mark, int final_exam_mark, int graduation_mark
@@ -226,6 +251,13 @@ public:
 	{
 		return Student::info(os) << topic_of_graduation_project << " " << practice_mark << " " << final_exam_mark << " " << graduation_mark;
 	}
+
+	std::istream& scan(std::istream& is) override
+	{
+		Student::scan(is);
+		is >> topic_of_graduation_project >> practice_mark >> final_exam_mark >> graduation_mark;
+		return is;
+	}
 };
 
 
@@ -279,6 +311,22 @@ public:
 		os << experience;
 		return os;
 	}
+
+
+	std::istream& scan(std::istream& is) override
+	{
+		Human::scan(is);
+		char sz_buffer[SPECIALITY_WIDTH + 1] = {};
+		is.read(sz_buffer, SPECIALITY_WIDTH);
+		for (int i = SPECIALITY_WIDTH - 1; sz_buffer[i] == ' '; i--) sz_buffer[i] = 0;
+
+		while (sz_buffer[0] == ' ')
+			for (int i = 0; sz_buffer[i]; i++) sz_buffer[i] = sz_buffer[i + 1];
+
+		speciality = sz_buffer; //сохраняем специальность в соотв. поле
+		is >> experience;
+		return is;
+	}
 };
 
 
@@ -314,6 +362,15 @@ void Clear(Human* group[], const int n)
 		cout << delimiter << endl;
 	}
 }
+Human* HumanFactory(const std::string& type)
+{
+	Human* human = nullptr;
+	if (strstr(type.c_str(), "Human")) human = new Human("", "", 0);
+	else if (strstr(type.c_str(), "Student")) human = new Student("", "", 0, "", "", 0, 0);
+	else if (strstr(type.c_str(), "Graduate")) human = new Graduate("", "", 0, "", "", 0, 0, "", 0, 0, 0);
+	else if (strstr(type.c_str(), "Teacher")) human = new Teacher("", "", 0, "", 0);
+	return human;
+}
 
 Human** Load(const std::string& filename, int& n)
 {
@@ -321,7 +378,7 @@ Human** Load(const std::string& filename, int& n)
 	std::ifstream fin(filename);
 	if (fin.is_open())
 	{
-		n = 0;
+		//n = 0;
 		std::string buffer;
 		while (!fin.eof())
 		{
@@ -335,14 +392,25 @@ Human** Load(const std::string& filename, int& n)
 		fin.clear();
 		fin.seekg(0);
 
-
+		for (int i = 0; i < n; i++)
+		{
+			std::string buffer;
+			std::getline(fin, buffer, ':');
+			if (buffer.size() < 5) continue;
+			group[i] = HumanFactory(buffer);
+			fin >> *group[i];
+			//i++;
+		}
 	}
 	else
 	{
 		std::cerr << "Error: file not found" << endl;
 	}
-
+	return group;
 }
+
+
+
 //#define INHERITANCE
 //#define POLYMORPHISM
 
@@ -369,10 +437,10 @@ void main()
 	Human* group[] =
 	{
 		new Student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98),
-		new Teacher("Pin", "Jes", 50, "Chemistry", 25),
-		new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrite fertilizers", 5, 5, 5),
+		new Teacher("Pin", "Jes", 50, "Chemistry Chem", 25),
+		new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "fertilizers", 5, 5, 5),
 		new Student("Jonh", "Coner", 30, "Chemistry", "WW_220", 95, 98),
-		new Teacher("Pinoc", "DjJes", 50, "Chemistry", 20)
+		new Teacher("Pinoc", "DjJes", 50, "Chemistry Chem", 20)
 	};
 
 	Print(group, sizeof(group) / sizeof(group[0]));
@@ -386,8 +454,9 @@ void main()
 	}
 
 #endif // POLYMORPHISM
-
+	int n = 0;
 	Human** group = Load("group.txt", n);
 	Print(group, n);
+	Save(group, n, "group_example.txt");
 	Clear(group, n);
 }
