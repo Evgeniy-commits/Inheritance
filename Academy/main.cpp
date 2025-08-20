@@ -20,6 +20,7 @@ public:
 	static const int TYPE_WIDTH = 12;
 	static const int NAME_WIDTH = 12;
 	static const int AGE_WIDTH = 5;
+	static const int HUMAN_SIZE = TYPE_WIDTH + NAME_WIDTH + NAME_WIDTH + AGE_WIDTH;
 	
 	static int get_count()
 	{
@@ -263,7 +264,6 @@ public:
 
 	std::istream& input(istream& is) override
 	{ 
-		//Human::input(is);
 		Student::input(is);
 		is >> topic_of_graduation_project >> practice_mark >> final_exam_mark >> graduation_mark;
 		return is;
@@ -385,28 +385,32 @@ Human** Load(const std::string& filename, int& n)
 		fin.seekg(0);
 		for (int i = 0; i < n; i++)
 		{
-			std::getline(fin, buffer, ':');
-			cout << buffer << endl;
-			//std::string key = buffer.substr(0, Human::TYPE_WIDTH);
-			std::string key = buffer;
-			//cout << key << endl;
+			std::getline(fin, buffer);
+			//cout << buffer << endl;
+			std::string key = buffer.substr(0, Human::TYPE_WIDTH).c_str();
+			cout << key << endl;
 			Human* body = nullptr;
 				if (strstr(key.c_str(), "Human")) 
-					body = new Human(buffer.substr(Human::TYPE_WIDTH, Human::NAME_WIDTH),
-					buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH),
-					buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH + Human::AGE_WIDTH));
-				if (strstr(key.c_str(), "Student")) body = new Student("", "", 0, "", "", 0, 0);
-				if (strstr(key.c_str(), "Graduate")) body = new Graduate("", "", 0, "", "", 0, 0, "", 0, 0, 0);
-				if (strstr(key.c_str(), "Teacher")) body = new Teacher("", "", 0, "", 0);
+					body = new Human(buffer.substr(Human::TYPE_WIDTH, Human::NAME_WIDTH).c_str(),
+					buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH).c_str(),
+					atoi(buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH + Human::AGE_WIDTH).c_str()));
+				if (strstr(key.c_str(), "Student"))
+					body = new Student(buffer.substr(Human::TYPE_WIDTH, Human::NAME_WIDTH).c_str(),
+						buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH).c_str(),
+						atoi(buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH + Human::AGE_WIDTH).c_str()),
+						buffer.substr(Human::HUMAN_SIZE, Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH).c_str(),
+						buffer.substr(Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH, Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH + Student::GROUP_WIDTH).c_str(),
+						atoi(buffer.substr(Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH + Student::GROUP_WIDTH, Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH + Student::GROUP_WIDTH + Student::RAT_WIDTH).c_str()),
+						atoi(buffer.substr(Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH + Student::GROUP_WIDTH + Student::RAT_WIDTH, Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH + Student::GROUP_WIDTH + Student::RAT_WIDTH + Student::RAT_WIDTH).c_str()));
+				//if (strstr(key.c_str(), "Graduate")) body = new Graduate();
+				//if (strstr(key.c_str(), "Teacher")) body = new Teacher();
 			
 			group[i] = body;
-			//fin >> *group[i];
-
-			//std::getline(fin, buffer, ':');
+			
+			//std::getline(fin, buffer);
 			//cout << buffer << endl;
-			////std::string key = buffer.substr(0, Human::TYPE_WIDTH);
-			//std::string key = buffer;
-			////cout << key << endl;
+			//std::string key = buffer.substr(0, Human::TYPE_WIDTH).c_str();
+			//cout << key << endl;
 			//Human* body = nullptr;
 			//if (strstr(key.c_str(), "Human")) body = new Human("", "", 0);
 			//if (strstr(key.c_str(), "Student")) body = new Student("", "", 0, "", "", 0, 0);
@@ -449,11 +453,12 @@ void main()
 #ifdef POLYMORPHISM
 	Human* group[] =
 	{
-		new Student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98),
-		new Teacher("Pin", "Jes", 50, "Chemistry", 25),
-		new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrid fertilizers", 5, 5, 5),
+		new Human("Pincman", "Jessie", 22),
+		new Student("Pincman", "Jessie Jes", 22, "Chemistry Chemistry", "WW_220", 95, 98),
+		//new Teacher("Pin", "Jes", 50, "Chemistry", 25),
+		//new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrid fertilizers", 5, 5, 5),
 		new Student("Jonh", "Coner", 30, "Chemistry", "WW_220", 95, 98),
-		new Teacher("Pinoc", "DjJes", 50, "Chemistry", 20)
+		//new Teacher("Pinoc", "DjJes", 50, "Chemistry", 20)
 	};
 
 	Print(group, sizeof(group) / sizeof(group[0]));
