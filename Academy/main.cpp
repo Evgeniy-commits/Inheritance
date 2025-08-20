@@ -12,14 +12,15 @@ using namespace std;
 
 class Human
 {
-	static const int TYPE_WIDTH = 12;
-	static const int NAME_WIDTH = 12;
-	static const int AGE_WIDTH = 5;
 	static int count;
 	std::string last_name;
 	std::string first_name;
 	int age;
 public:
+	static const int TYPE_WIDTH = 12;
+	static const int NAME_WIDTH = 12;
+	static const int AGE_WIDTH = 5;
+	
 	static int get_count()
 	{
 		return count;
@@ -79,27 +80,40 @@ public:
 		os << age;
 		return os;
 	}
+	virtual istream& input(istream& is)
+	{
+		is >> last_name >> first_name >> age;
+		return is;
+	}
 };
 
 int Human::count = 0;
+
+
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
 	return obj.info(os);
 }
+
+std::istream& operator>>(istream& is, Human& obj)
+{
+	return obj.input(is);
+}
+
 
 #define STUDENT_TAKE_PARAMETRS const std::string& spesiality, const std::string& group, double rating, double attendance
 #define STUDENT_GIVE_PARAMETRS spesiality,group, rating, attendance
 
 class Student :public Human
 {
-	static const int SPECIALITY_WIDTH = 32;
-	static const int GROUP_WIDTH = 8;
-	static const int RAT_WIDTH = 8;
 	std::string speciality;
 	std::string group;
 	double rating;
 	double attendance;
 public:
+	static const int SPECIALITY_WIDTH = 32;
+	static const int GROUP_WIDTH = 8;
+	static const int RAT_WIDTH = 8;
 	const std::string& get_speciality() const
 	{
 		return speciality;
@@ -162,6 +176,12 @@ public:
 		os << attendance;
 		return os;
 	}
+	std::istream& input(istream& is) override
+	{
+		Human::input(is);
+		is >> speciality >> group >> rating >> attendance;
+		return is;
+	}
 };
 
 #define GRADUATE_TAKE_PARAMETRS const std::string& topic_of_graduation_project, int practice_mark, int final_exam_mark, int graduation_mark
@@ -174,6 +194,10 @@ class Graduate :public Student
 	int final_exam_mark;
 	int graduation_mark;
 public:
+	static const int TOPIC_WIDTH = 20;
+	static const int PRACTICE_MARK_WIDTH = 3;
+	static const int FINAL_EXAM_MARK_WIDTH = 3;
+	static const int GRADUATION_MARK_WIDTH = 3;
 	const std::string& get_topic_of_graduation_project() const
 	{
 		return topic_of_graduation_project;
@@ -224,7 +248,25 @@ public:
 	//Methods
 	std::ostream& info(std::ostream& os)const override
 	{
-		return Student::info(os) << topic_of_graduation_project << " " << practice_mark << " " << final_exam_mark << " " << graduation_mark;
+		//return Student::info(os) << topic_of_graduation_project << " " << practice_mark << " " << final_exam_mark << " " << graduation_mark;
+		Student::info(os);
+		os.width(TOPIC_WIDTH);
+		os << topic_of_graduation_project;
+		os.width(PRACTICE_MARK_WIDTH);
+		os << practice_mark;
+		os.width(FINAL_EXAM_MARK_WIDTH);
+		os << final_exam_mark;
+		os.width(GRADUATION_MARK_WIDTH);
+		os << graduation_mark;
+		return os;
+	}
+
+	std::istream& input(istream& is) override
+	{ 
+		//Human::input(is);
+		Student::input(is);
+		is >> topic_of_graduation_project >> practice_mark >> final_exam_mark >> graduation_mark;
+		return is;
 	}
 };
 
@@ -278,6 +320,13 @@ public:
 		os.width(EXPIRIENCE_WIDTH);
 		os << experience;
 		return os;
+	}
+
+	std::istream& input(istream& is) override
+	{
+		Human::input(is);
+		is >> speciality >> experience;
+		return is;
 	}
 };
 
@@ -334,13 +383,46 @@ Human** Load(const std::string& filename, int& n)
 		cout << "Position " << fin.tellg() << endl;
 		fin.clear();
 		fin.seekg(0);
+		for (int i = 0; i < n; i++)
+		{
+			std::getline(fin, buffer, ':');
+			cout << buffer << endl;
+			//std::string key = buffer.substr(0, Human::TYPE_WIDTH);
+			std::string key = buffer;
+			//cout << key << endl;
+			Human* body = nullptr;
+				if (strstr(key.c_str(), "Human")) 
+					body = new Human(buffer.substr(Human::TYPE_WIDTH, Human::NAME_WIDTH),
+					buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH),
+					buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH + Human::AGE_WIDTH));
+				if (strstr(key.c_str(), "Student")) body = new Student("", "", 0, "", "", 0, 0);
+				if (strstr(key.c_str(), "Graduate")) body = new Graduate("", "", 0, "", "", 0, 0, "", 0, 0, 0);
+				if (strstr(key.c_str(), "Teacher")) body = new Teacher("", "", 0, "", 0);
+			
+			group[i] = body;
+			//fin >> *group[i];
 
+			//std::getline(fin, buffer, ':');
+			//cout << buffer << endl;
+			////std::string key = buffer.substr(0, Human::TYPE_WIDTH);
+			//std::string key = buffer;
+			////cout << key << endl;
+			//Human* body = nullptr;
+			//if (strstr(key.c_str(), "Human")) body = new Human("", "", 0);
+			//if (strstr(key.c_str(), "Student")) body = new Student("", "", 0, "", "", 0, 0);
+			//if (strstr(key.c_str(), "Graduate")) body = new Graduate("", "", 0, "", "", 0, 0, "", 0, 0, 0);
+			//if (strstr(key.c_str(), "Teacher")) body = new Teacher("", "", 0, "", 0);
+
+			//group[i] = body;
+			//fin >> *group[i];
+		}
+		fin.close();
 	}
 	else
 	{
 		std::cerr << "Error: file not found" << endl;
 	}
-
+	return group;
 }
 //#define INHERITANCE
 //#define POLYMORPHISM
@@ -369,7 +451,7 @@ void main()
 	{
 		new Student("Pincman", "Jessie", 22, "Chemistry", "WW_220", 95, 98),
 		new Teacher("Pin", "Jes", 50, "Chemistry", 25),
-		new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrite fertilizers", 5, 5, 5),
+		new Graduate("Sara", "Coner", 25, "Chemistry", "WW_520", 95, 98, "nitrid fertilizers", 5, 5, 5),
 		new Student("Jonh", "Coner", 30, "Chemistry", "WW_220", 95, 98),
 		new Teacher("Pinoc", "DjJes", 50, "Chemistry", 20)
 	};
@@ -385,8 +467,10 @@ void main()
 	}
 
 #endif // POLYMORPHISM
-
+	
+	int n = 0;
 	Human** group = Load("group.txt", n);
 	Print(group, n);
 	Clear(group, n);
 }
+
