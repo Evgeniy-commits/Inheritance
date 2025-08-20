@@ -378,7 +378,7 @@ Human** Load(const std::string& filename, int& n)
 	std::ifstream fin(filename);
 	if (fin.is_open())
 	{
-		//n = 0;
+		n = 0;
 		std::string buffer;
 		while (!fin.eof())
 		{
@@ -399,7 +399,6 @@ Human** Load(const std::string& filename, int& n)
 			if (buffer.size() < 5) continue;
 			group[i] = HumanFactory(buffer);
 			fin >> *group[i];
-			//i++;
 		}
 	}
 	else
@@ -454,7 +453,7 @@ void main()
 	}
 
 #endif // POLYMORPHISM
-	int n = 0;
+	int n;
 	Human** group = Load("group.txt", n);
 	Print(group, n);
 	Save(group, n, "group_example.txt");
