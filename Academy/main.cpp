@@ -401,6 +401,7 @@ Human** Load(const std::string& filename, int& n)
 			fin >> *group[i];
 		}
 	}
+
 	else
 	{
 		std::cerr << "Error: file not found" << endl;
