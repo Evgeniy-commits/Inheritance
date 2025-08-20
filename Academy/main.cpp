@@ -81,7 +81,7 @@ public:
 		os << age;
 		return os;
 	}
-	virtual istream& input(istream& is)
+	virtual std::istream& input(istream& is)
 	{
 		is >> last_name >> first_name >> age;
 		return is;
@@ -96,7 +96,7 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 	return obj.info(os);
 }
 
-std::istream& operator>>(istream& is, Human& obj)
+std::istream& operator>>(std::istream& is, Human& obj)
 {
 	return obj.input(is);
 }
@@ -177,7 +177,7 @@ public:
 		os << attendance;
 		return os;
 	}
-	std::istream& input(istream& is) override
+	std::istream& input(std::istream& is) override
 	{
 		Human::input(is);
 		is >> speciality >> group >> rating >> attendance;
@@ -262,7 +262,7 @@ public:
 		return os;
 	}
 
-	std::istream& input(istream& is) override
+	std::istream& input(std::istream& is) override
 	{ 
 		Student::input(is);
 		is >> topic_of_graduation_project >> practice_mark >> final_exam_mark >> graduation_mark;
@@ -322,7 +322,7 @@ public:
 		return os;
 	}
 
-	std::istream& input(istream& is) override
+	std::istream& input(std::istream& is) override
 	{
 		Human::input(is);
 		is >> speciality >> experience;
@@ -391,11 +391,11 @@ Human** Load(const std::string& filename, int& n)
 			cout << key << endl;
 			Human* body = nullptr;
 				if (strstr(key.c_str(), "Human")) 
-					body = new Human(buffer.substr(Human::TYPE_WIDTH, Human::NAME_WIDTH).c_str(),
+					body = new Human(buffer.substr(Human::TYPE_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH).c_str(),
 					buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH).c_str(),
 					atoi(buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH + Human::AGE_WIDTH).c_str()));
 				if (strstr(key.c_str(), "Student"))
-					body = new Student(buffer.substr(Human::TYPE_WIDTH, Human::NAME_WIDTH).c_str(),
+					body = new Student(buffer.substr(Human::TYPE_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH).c_str(),
 						buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH).c_str(),
 						atoi(buffer.substr(Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH, Human::TYPE_WIDTH + Human::NAME_WIDTH + Human::NAME_WIDTH + Human::AGE_WIDTH).c_str()),
 						buffer.substr(Human::HUMAN_SIZE, Human::HUMAN_SIZE + Student::SPECIALITY_WIDTH).c_str(),
