@@ -407,18 +407,22 @@ Human** Load(const std::string& filename, int& n)
 			
 			group[i] = body;
 			
-			//std::getline(fin, buffer);
-			//cout << buffer << endl;
-			//std::string key = buffer.substr(0, Human::TYPE_WIDTH).c_str();
-			//cout << key << endl;
-			//Human* body = nullptr;
-			//if (strstr(key.c_str(), "Human")) body = new Human("", "", 0);
-			//if (strstr(key.c_str(), "Student")) body = new Student("", "", 0, "", "", 0, 0);
-			//if (strstr(key.c_str(), "Graduate")) body = new Graduate("", "", 0, "", "", 0, 0, "", 0, 0, 0);
-			//if (strstr(key.c_str(), "Teacher")) body = new Teacher("", "", 0, "", 0);
+			/*std::getline(fin, buffer);
+			cout << buffer << endl;
+			std::string key = buffer.substr(0, Human::TYPE_WIDTH).c_str();
+			cout << key << endl;
+			Human* body = nullptr;
+			if (strstr(key.c_str(), "Human"))
+				body = new Human("", "", 0);
+			if (strstr(key.c_str(), "Student"))
+				body = new Student("", "", 0, "", "", 0, 0);
+			if (strstr(key.c_str(), "Graduate"))
+				body = new Graduate("", "", 0, "", "", 0, 0, "", 0, 0, 0);
+			if (strstr(key.c_str(), "Teacher"))
+				body = new Teacher("", "", 0, "", 0);
 
-			//group[i] = body;
-			//fin >> *group[i];
+			group[i] = body;
+			fin >> *group[i];*/
 		}
 		fin.close();
 	}
