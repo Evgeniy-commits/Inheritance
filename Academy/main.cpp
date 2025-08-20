@@ -335,6 +335,7 @@ Human** Load(const std::string& filename, int& n)
 		fin.clear();
 		fin.seekg(0);
 
+
 	}
 	else
 	{
