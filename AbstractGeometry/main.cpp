@@ -1,4 +1,4 @@
-#define _USE_MATH_DEFINES
+ï»¿#define _USE_MATH_DEFINES
 #include <iostream>
 #include <Windows.h>
 
@@ -89,8 +89,8 @@ namespace Geometry
 		virtual void draw()const = 0;
 		virtual void info()const
 		{
-			cout << "Ïëîùàäü ôèãóðû: " << get_area() << endl;
-			cout << "Ïåðèìåòð ôèãóðû: " << get_perimetr() << endl;
+			cout << "ÐŸÐ»Ð¾Ñ‰Ð°Ð´ÑŒ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹: " << get_area() << endl;
+			cout << "ÐŸÐµÑ€Ð¸Ð¼ÐµÑ‚Ñ€ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹: " << get_perimetr() << endl;
 			draw();
 		}
 	};
@@ -134,7 +134,7 @@ namespace Geometry
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Äëèíà ñòîðîíû êâàäðàòà: " << get_side() << endl;
+			cout << "Ð”Ð»Ð¸Ð½Ð° ÑÑ‚Ð¾Ñ€Ð¾Ð½Ñ‹ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°: " << get_side() << endl;
 			Shape::info();
 		}
 	};*/
@@ -175,21 +175,21 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Ïîëó÷àåì îêíî êîíñîëè
-			HDC hdc = GetDC(hwnd);			//2) Ïîëó÷àåì êîíòåêñò óñòðîéñòâà (DC - Device Context) äëÿ îêíà êîíñîëè
-			// DC - ýòî òî íà÷åì ìû áóäåì ðèñîâàòü
-//3) Ñîçäàäèì èíñòðóìåíòû, êîòîðûìè ìû áóäåì ðèñîâàòü
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Êàðàíäàø (Pen) ðèñóåò êîíòóð ôèãóðû
-			HBRUSH hBrush = CreateSolidBrush(color);   //Êèñòü (Brush) ðèñóåò çàëèâêó ôèãóðû
+			HWND hwnd = GetConsoleWindow();  //1) ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¾ÐºÐ½Ð¾ ÐºÐ¾Ð½ÑÐ¾Ð»Ð¸
+			HDC hdc = GetDC(hwnd);			//2) ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° (DC - Device Context) Ð´Ð»Ñ Ð¾ÐºÐ½Ð° ÐºÐ¾Ð½ÑÐ¾Ð»Ð¸
+			// DC - ÑÑ‚Ð¾ Ñ‚Ð¾ Ð½Ð°Ñ‡ÐµÐ¼ Ð¼Ñ‹ Ð±ÑƒÐ´ÐµÐ¼ Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ
+//3) Ð¡Ð¾Ð·Ð´Ð°Ð´Ð¸Ð¼ Ð¸Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¼Ð¸ Ð¼Ñ‹ Ð±ÑƒÐ´ÐµÐ¼ Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //ÐšÐ°Ñ€Ð°Ð½Ð´Ð°Ñˆ (Pen) Ñ€Ð¸ÑÑƒÐµÑ‚ ÐºÐ¾Ð½Ñ‚ÑƒÑ€ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹
+			HBRUSH hBrush = CreateSolidBrush(color);   //ÐšÐ¸ÑÑ‚ÑŒ (Brush) Ñ€Ð¸ÑÑƒÐµÑ‚ Ð·Ð°Ð»Ð¸Ð²ÐºÑƒ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹
 
-			//4)Âûáåðåì ñîçäàííûå èíñòðóìåíòû:
+			//4)Ð’Ñ‹Ð±ÐµÑ€ÐµÐ¼ ÑÐ¾Ð·Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¸Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹:
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
-			//5) Ïîñëå òîãî, êàê âñå íåîáõîäèìûå èíñòðóìåíòû ñîçäàíû è âûáðàíû, ìîæíî ðèñîâàòü
+			//5) ÐŸÐ¾ÑÐ»Ðµ Ñ‚Ð¾Ð³Ð¾, ÐºÐ°Ðº Ð²ÑÐµ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ð¸Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹ ÑÐ¾Ð·Ð´Ð°Ð½Ñ‹ Ð¸ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ñ‹, Ð¼Ð¾Ð¶Ð½Ð¾ Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ
 			::Rectangle(hdc, start_x, start_y, start_x + width, start_y + height);
 
-			//6) hdc, hPen, hBrush çàíèìàþò ðåñóðñû, à ðåñóðñû íóæíî îñâîáîæäàòü
+			//6) hdc, hPen, hBrush Ð·Ð°Ð½Ð¸Ð¼Ð°ÑŽÑ‚ Ñ€ÐµÑÑƒÑ€ÑÑ‹, Ð° Ñ€ÐµÑÑƒÑ€ÑÑ‹ Ð½ÑƒÐ¶Ð½Ð¾ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð¶Ð´Ð°Ñ‚ÑŒ
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 
@@ -198,7 +198,7 @@ namespace Geometry
 		void info()const override
 		{
 			cout << typeid(*this).name() << endl;
-			cout << "Ñòîðîíû: " << width << " x " << height << endl;
+			cout << "Ð¡Ñ‚Ð¾Ñ€Ð¾Ð½Ñ‹: " << width << " x " << height << endl;
 			Shape::info();
 		}
 	};
@@ -248,21 +248,21 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Ïîëó÷àåì îêíî êîíñîëè
-			HDC hdc = GetDC(hwnd);			//2) Ïîëó÷àåì êîíòåêñò óñòðîéñòâà (DC - Device Context) äëÿ îêíà êîíñîëè
-			// DC - ýòî òî íà÷åì ìû áóäåì ðèñîâàòü
-			//3) Ñîçäàäèì èíñòðóìåíòû, êîòîðûìè ìû áóäåì ðèñîâàòü
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Êàðàíäàø (Pen) ðèñóåò êîíòóð ôèãóðû
-			HBRUSH hBrush = CreateSolidBrush(color);   //Êèñòü (Brush) ðèñóåò çàëèâêó ôèãóðû
+			HWND hwnd = GetConsoleWindow();  //1) ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ Ð¾ÐºÐ½Ð¾ ÐºÐ¾Ð½ÑÐ¾Ð»Ð¸
+			HDC hdc = GetDC(hwnd);			//2) ÐŸÐ¾Ð»ÑƒÑ‡Ð°ÐµÐ¼ ÐºÐ¾Ð½Ñ‚ÐµÐºÑÑ‚ ÑƒÑÑ‚Ñ€Ð¾Ð¹ÑÑ‚Ð²Ð° (DC - Device Context) Ð´Ð»Ñ Ð¾ÐºÐ½Ð° ÐºÐ¾Ð½ÑÐ¾Ð»Ð¸
+			// DC - ÑÑ‚Ð¾ Ñ‚Ð¾ Ð½Ð°Ñ‡ÐµÐ¼ Ð¼Ñ‹ Ð±ÑƒÐ´ÐµÐ¼ Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ
+			//3) Ð¡Ð¾Ð·Ð´Ð°Ð´Ð¸Ð¼ Ð¸Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¼Ð¸ Ð¼Ñ‹ Ð±ÑƒÐ´ÐµÐ¼ Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //ÐšÐ°Ñ€Ð°Ð½Ð´Ð°Ñˆ (Pen) Ñ€Ð¸ÑÑƒÐµÑ‚ ÐºÐ¾Ð½Ñ‚ÑƒÑ€ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹
+			HBRUSH hBrush = CreateSolidBrush(color);   //ÐšÐ¸ÑÑ‚ÑŒ (Brush) Ñ€Ð¸ÑÑƒÐµÑ‚ Ð·Ð°Ð»Ð¸Ð²ÐºÑƒ Ñ„Ð¸Ð³ÑƒÑ€Ñ‹
 
-			//4)Âûáåðåì ñîçäàííûå èíñòðóìåíòû:
+			//4)Ð’Ñ‹Ð±ÐµÑ€ÐµÐ¼ ÑÐ¾Ð·Ð´Ð°Ð½Ð½Ñ‹Ðµ Ð¸Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹:
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
 
-			//5) Ïîñëå òîãî, êàê âñå íåîáõîäèìûå èíñòðóìåíòû ñîçäàíû è âûáðàíû, ìîæíî ðèñîâàòü
+			//5) ÐŸÐ¾ÑÐ»Ðµ Ñ‚Ð¾Ð³Ð¾, ÐºÐ°Ðº Ð²ÑÐµ Ð½ÐµÐ¾Ð±Ñ…Ð¾Ð´Ð¸Ð¼Ñ‹Ðµ Ð¸Ð½ÑÑ‚Ñ€ÑƒÐ¼ÐµÐ½Ñ‚Ñ‹ ÑÐ¾Ð·Ð´Ð°Ð½Ñ‹ Ð¸ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ñ‹, Ð¼Ð¾Ð¶Ð½Ð¾ Ñ€Ð¸ÑÐ¾Ð²Ð°Ñ‚ÑŒ
 			::Ellipse(hdc, start_x, start_y, start_x + 2 * radius, start_y + 2 * radius);
 
-			//6) hdc, hPen, hBrush çàíèìàþò ðåñóðñû, à ðåñóðñû íóæíî îñâîáîæäàòü
+			//6) hdc, hPen, hBrush Ð·Ð°Ð½Ð¸Ð¼Ð°ÑŽÑ‚ Ñ€ÐµÑÑƒÑ€ÑÑ‹, Ð° Ñ€ÐµÑÑƒÑ€ÑÑ‹ Ð½ÑƒÐ¶Ð½Ð¾ Ð¾ÑÐ²Ð¾Ð±Ð¾Ð¶Ð´Ð°Ñ‚ÑŒ
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
 
@@ -276,9 +276,9 @@ void main()
 {
 	setlocale(LC_ALL, "");
 	Geometry::Square square(150, 100, 100, 1, Geometry::Color::Red);
-	/*cout << "Äëèíà ñòîðîíû êâàäðàòà: " << square.get_side() << endl;
-	cout << "Ïëîùàäü êâàäðàòà: " << square.get_area() << endl;
-	cout << "Ïåðèìåòð êâàäðàòà: " << square.get_perimetr() << endl;
+	/*cout << "Ð”Ð»Ð¸Ð½Ð° ÑÑ‚Ð¾Ñ€Ð¾Ð½Ñ‹ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°: " << square.get_side() << endl;
+	cout << "ÐŸÐ»Ð¾Ñ‰Ð°Ð´ÑŒ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°: " << square.get_area() << endl;
+	cout << "ÐŸÐµÑ€Ð¸Ð¼ÐµÑ‚Ñ€ ÐºÐ²Ð°Ð´Ñ€Ð°Ñ‚Ð°: " << square.get_perimetr() << endl;
 	square.draw();*/
 	cout << "\n-----------------------------------------\n" << endl;
 	square.info();
