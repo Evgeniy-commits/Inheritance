@@ -1,7 +1,10 @@
+#define _USE_MATH_DEFINES
 #include <iostream>
 #include <Windows.h>
 
 using namespace std;
+
+//#define pi	3.14
 
 namespace Geometry
 {
@@ -62,6 +65,12 @@ namespace Geometry
 				line_width < MIN_LINE_WIDTH ? MIN_LINE_WIDTH :
 				line_width > MAX_LINE_WIDTH ? MAX_LINE_WIDTH :
 				line_width;
+		}
+		int filter_size(int size) const
+		{
+			return size < MIN_SIZE ? MIN_SIZE :
+				size > MAX_SIZE ? MAX_SIZE :
+				size;
 		}
 		int get_start_x() const
 		{
@@ -150,11 +159,11 @@ namespace Geometry
 		}*/
 		void set_width(double width)
 		{
-			this->width = width;
+			this->width = filter_size(width);
 		}
 		void set_height(double height)
 		{
-			this->height = height;
+			this->height = filter_size(height);
 		}
 		double get_area()const override
 		{
@@ -168,11 +177,11 @@ namespace Geometry
 		{
 			HWND hwnd = GetConsoleWindow();  //1) ѕолучаем окно консоли
 			HDC hdc = GetDC(hwnd);			//2) ѕолучаем контекст устройства (DC - Device Context) дл€ окна консоли
-											// DC - это то начем мы будем рисовать
-			//3) —оздадим инструменты, которыми мы будем рисовать
+			// DC - это то начем мы будем рисовать
+//3) —оздадим инструменты, которыми мы будем рисовать
 			HPEN hPen = CreatePen(PS_SOLID, line_width, color); // арандаш (Pen) рисует контур фигуры
 			HBRUSH hBrush = CreateSolidBrush(color);   // исть (Brush) рисует заливку фигуры
-			
+
 			//4)¬ыберем созданные инструменты:
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, hBrush);
@@ -183,7 +192,7 @@ namespace Geometry
 			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
-			
+
 			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
@@ -196,8 +205,70 @@ namespace Geometry
 
 	class Square : public Rectangle
 	{
+		double side;
 	public:
-		Square (int side, SHAPE_TAKE_PARAMETRS) : Rectangle(side, side, SHAPE_GIVE_PARAMETRS){}
+		Square(double side, SHAPE_TAKE_PARAMETRS) : Rectangle(side, side, SHAPE_GIVE_PARAMETRS)
+		{
+			set_side(side);
+		}
+		void set_side(double side)
+		{
+			this->side = filter_size(side);
+		}
+		double get_side() const
+		{
+			return side;
+		}
+
+	};
+
+	class Circle : public Shape
+	{
+		double radius;
+	public:
+		Circle(double radius, SHAPE_TAKE_PARAMETRS) : Shape(SHAPE_GIVE_PARAMETRS)
+		{
+			set_radius(radius);
+		}
+		void set_radius(double radius)
+		{
+			this->radius = filter_size(radius);
+		}
+		double get_radius() const
+		{
+			return radius;
+		}
+		double get_area()const override
+		{
+			return M_PI * radius * radius;
+		}
+		double get_perimetr()const override
+		{
+			return 2 * M_PI * radius;
+		}
+		void draw()const override
+		{
+			HWND hwnd = GetConsoleWindow();  //1) ѕолучаем окно консоли
+			HDC hdc = GetDC(hwnd);			//2) ѕолучаем контекст устройства (DC - Device Context) дл€ окна консоли
+			// DC - это то начем мы будем рисовать
+			//3) —оздадим инструменты, которыми мы будем рисовать
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color); // арандаш (Pen) рисует контур фигуры
+			HBRUSH hBrush = CreateSolidBrush(color);   // исть (Brush) рисует заливку фигуры
+
+			//4)¬ыберем созданные инструменты:
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+
+			//5) ѕосле того, как все необходимые инструменты созданы и выбраны, можно рисовать
+			::Ellipse(hdc, start_x, start_y, start_x + 2 * radius, start_y + 2 * radius);
+
+			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+
+			ReleaseDC(hwnd, hdc);
+		}
+
 	};
 }
 
@@ -214,9 +285,13 @@ void main()
 	cout << "\n-----------------------------------------\n" << endl;
 	Geometry::Rectangle rectangle(150, 100, 500, 100, 5, Geometry::Color::Orange);
 	rectangle.info();
+	cout << "\n-----------------------------------------\n" << endl;
+	Geometry::Circle circle(50, 800, 200, 1, Geometry::Color::Yellow);
+	circle.info();
 	while (true)
 	{
 		square.draw();
 		rectangle.draw();
+		circle.draw();
 	}
 }
