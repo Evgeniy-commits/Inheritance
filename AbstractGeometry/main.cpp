@@ -270,6 +270,70 @@ namespace Geometry
 		}
 
 	};
+
+	class Triangle : public Shape
+	{
+	public:
+		Triangle(SHAPE_TAKE_PARAMETRS) : Shape(SHAPE_GIVE_PARAMETRS){}
+		virtual double get_height()const = 0;
+	};
+
+	class EquilateralTriangle : public Triangle
+	{
+		//равносторонний
+		double side;
+	public:
+		EquilateralTriangle(double side, SHAPE_TAKE_PARAMETRS) : Triangle(SHAPE_GIVE_PARAMETRS)
+		{
+			set_side(side);
+		}
+		void set_side(double side)
+		{
+			this->side = filter_size(side);
+		}
+		double get_side() const
+		{
+			return side;
+		}
+		double get_height() const override
+		{
+			return sqrt(pow(side, 2) - pow(side / 2, 2));
+		}
+		double get_area()const override
+		{
+			return side * get_height() / 2;
+		}
+		double get_perimetr()const override
+		{
+			return 3 * side;
+		}
+		void draw()const override
+		{
+			{
+				HWND hwnd = GetConsoleWindow();
+				HDC hdc = GetDC(hwnd);	
+				
+				HPEN hPen = CreatePen(PS_SOLID, line_width, color); 
+				HBRUSH hBrush = CreateSolidBrush(color);   
+
+				SelectObject(hdc, hPen);
+				SelectObject(hdc, hBrush);
+
+				const POINT vertices[] =
+				{
+					{start_x, start_y + get_height()},
+					{start_x + side, start_y + get_height()},
+					{start_x + side /2, start_y}
+				};
+				::Polygon(hdc, vertices, 3);
+
+				DeleteObject(hBrush);
+				DeleteObject(hPen);
+
+				ReleaseDC(hwnd, hdc);
+			}
+		}
+	};
 }
 
 void main()
@@ -288,10 +352,14 @@ void main()
 	cout << "\n-----------------------------------------\n" << endl;
 	Geometry::Circle circle(50, 800, 200, 1, Geometry::Color::Yellow);
 	circle.info();
+	cout << "\n-----------------------------------------\n" << endl;
+	Geometry::EquilateralTriangle e_triangle(100, 550, 350, 16, Geometry::Color::Green);
+	e_triangle.info();
 	while (true)
 	{
 		square.draw();
 		rectangle.draw();
 		circle.draw();
+		e_triangle.draw();
 	}
 }
