@@ -24,7 +24,6 @@ namespace Geometry
 	class Shape
 	{
 	protected:
-		static HWND hwnd;
 		HDC hdc;
 		HPEN hPen;
 		HBRUSH hBrush;
@@ -44,7 +43,7 @@ namespace Geometry
 
 		Shape(SHAPE_TAKE_PARAMETRS) : color(color)
 		{
-			hdc = GetDC(hwnd);
+			hdc = GetDC(GetConsoleWindow());
 			set_start_x(start_x);
 			set_start_y(start_y);
 			set_line_width(line_width);
@@ -57,7 +56,7 @@ namespace Geometry
 		{
 			DeleteObject(hBrush);
 			DeleteObject(hPen);
-			ReleaseDC(hwnd, hdc);
+			ReleaseDC(GetConsoleWindow(), hdc);
 		}
 		void set_start_x(int start_x)
 		{
@@ -108,10 +107,7 @@ namespace Geometry
 			draw();
 		}
 	};
-	HWND Shape::hwnd = GetConsoleWindow();
-
-
-
+	
 	class Rectangle : public Shape
 	{
 		double width;
