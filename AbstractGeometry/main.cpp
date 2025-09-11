@@ -24,6 +24,9 @@ namespace Geometry
 	class Shape
 	{
 	protected:
+		HDC hdc;
+		HPEN hPen;
+		HBRUSH hBrush;
 		Color color;
 		int start_x;
 		int start_y;
@@ -44,6 +47,18 @@ namespace Geometry
 			set_start_y(start_y);
 			set_line_width(line_width);
 
+			//DrawingTools:
+			hdc = GetDC(GetConsoleWindow());
+			hPen = CreatePen(PS_SOLID, line_width, color);
+			hBrush = CreateSolidBrush(color);
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+		}
+		~Shape()
+		{
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+			ReleaseDC(GetConsoleWindow(), hdc);
 		}
 		void set_start_x(int start_x)
 		{
@@ -94,7 +109,7 @@ namespace Geometry
 			draw();
 		}
 	};
-
+	
 	class Rectangle : public Shape
 	{
 		double width;
@@ -105,14 +120,6 @@ namespace Geometry
 			set_width(width);
 			set_height(height);
 		}
-		/*double get_width()const
-		{
-			return width;
-		}
-		double get_height()const
-		{
-			return height;
-		}*/
 		void set_width(double width)
 		{
 			this->width = filter_size(width);
@@ -131,25 +138,7 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Получаем окно консоли
-			HDC hdc = GetDC(hwnd);			//2) Получаем контекст устройства (DC - Device Context) для окна консоли
-			// DC - это то начем мы будем рисовать
-//3) Создадим инструменты, которыми мы будем рисовать
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Карандаш (Pen) рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);   //Кисть (Brush) рисует заливку фигуры
-
-			//4)Выберем созданные инструменты:
-			SelectObject(hdc, hPen);
-			SelectObject(hdc, hBrush);
-
-			//5) После того, как все необходимые инструменты созданы и выбраны, можно рисовать
 			::Rectangle(hdc, start_x, start_y, start_x + width, start_y + height);
-
-			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
-			DeleteObject(hBrush);
-			DeleteObject(hPen);
-
-			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
 		{
@@ -204,25 +193,7 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Получаем окно консоли
-			HDC hdc = GetDC(hwnd);			//2) Получаем контекст устройства (DC - Device Context) для окна консоли
-			// DC - это то начем мы будем рисовать
-			//3) Создадим инструменты, которыми мы будем рисовать
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Карандаш (Pen) рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);   //Кисть (Brush) рисует заливку фигуры
-
-			//4)Выберем созданные инструменты:
-			SelectObject(hdc, hPen);
-			SelectObject(hdc, hBrush);
-
-			//5) После того, как все необходимые инструменты созданы и выбраны, можно рисовать
 			::Ellipse(hdc, start_x, start_y, start_x + 2 * radius, start_y + 2 * radius);
-
-			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
-			DeleteObject(hBrush);
-			DeleteObject(hPen);
-
-			ReleaseDC(hwnd, hdc);
 		}
 
 	};
@@ -265,29 +236,15 @@ namespace Geometry
 		}
 		void draw()const override
 		{
+
+			const POINT vertices[] =
 			{
-				HWND hwnd = GetConsoleWindow();
-				HDC hdc = GetDC(hwnd);
+				{start_x, start_y + get_height()},
+				{start_x + side, start_y + get_height()},
+				{start_x + side / 2, start_y}
+			};
+			::Polygon(hdc, vertices, 3);
 
-				HPEN hPen = CreatePen(PS_SOLID, line_width, color);
-				HBRUSH hBrush = CreateSolidBrush(color);
-
-				SelectObject(hdc, hPen);
-				SelectObject(hdc, hBrush);
-
-				const POINT vertices[] =
-				{
-					{start_x, start_y + get_height()},
-					{start_x + side, start_y + get_height()},
-					{start_x + side / 2, start_y}
-				};
-				::Polygon(hdc, vertices, 3);
-
-				DeleteObject(hBrush);
-				DeleteObject(hPen);
-
-				ReleaseDC(hwnd, hdc);
-			}
 		}
 	};
 }
