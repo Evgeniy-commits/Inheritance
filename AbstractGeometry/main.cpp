@@ -24,6 +24,10 @@ namespace Geometry
 	class Shape
 	{
 	protected:
+		static HWND hwnd;
+		HDC hdc;
+		HPEN hPen;
+		HBRUSH hBrush;
 		Color color;
 		int start_x;
 		int start_y;
@@ -40,10 +44,20 @@ namespace Geometry
 
 		Shape(SHAPE_TAKE_PARAMETRS) : color(color)
 		{
+			hdc = GetDC(hwnd);
 			set_start_x(start_x);
 			set_start_y(start_y);
 			set_line_width(line_width);
-
+			hPen = CreatePen(PS_SOLID, line_width, color);
+			hBrush = CreateSolidBrush(color);
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+		}
+		~Shape()
+		{
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+			ReleaseDC(hwnd, hdc);
 		}
 		void set_start_x(int start_x)
 		{
@@ -94,50 +108,9 @@ namespace Geometry
 			draw();
 		}
 	};
+	HWND Shape::hwnd = GetConsoleWindow();
 
-	/*class Square :public Shape
-	{
-		double side;
-	public:
-		Square(double side, SHAPE_TAKE_PARAMETRS) :Shape(SHAPE_GIVE_PARAMETRS)
-		{
-			set_side(side);
-		}
-		double get_side()const
-		{
-			return side;
-		}
-		void set_side(double side)
-		{
-			this->side = side;
-		}
-		double get_area()const override
-		{
-			return side * side;
-		}
-		double get_perimetr()const override
-		{
-			return 4 * side;
-		}
-		void draw()const override
-		{
-			for (int i = 0; i < side; i++)
-			{
-				for (int j = 0; j < side; j++)
-				{
-					cout << "* ";
-				}
-				cout << endl;
-			}
-			cout << endl;
-		}
-		void info()const override
-		{
-			cout << typeid(*this).name() << endl;
-			cout << "Длина стороны квадрата: " << get_side() << endl;
-			Shape::info();
-		}
-	};*/
+
 
 	class Rectangle : public Shape
 	{
@@ -149,14 +122,6 @@ namespace Geometry
 			set_width(width);
 			set_height(height);
 		}
-		/*double get_width()const
-		{
-			return width;
-		}
-		double get_height()const
-		{
-			return height;
-		}*/
 		void set_width(double width)
 		{
 			this->width = filter_size(width);
@@ -175,25 +140,7 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Получаем окно консоли
-			HDC hdc = GetDC(hwnd);			//2) Получаем контекст устройства (DC - Device Context) для окна консоли
-											// DC - это то начем мы будем рисовать
-			//3) Создадим инструменты, которыми мы будем рисовать
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Карандаш (Pen) рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);   //Кисть (Brush) рисует заливку фигуры
-			
-			//4)Выберем созданные инструменты:
-			SelectObject(hdc, hPen);
-			SelectObject(hdc, hBrush);
-
-			//5) После того, как все необходимые инструменты созданы и выбраны, можно рисовать
 			::Rectangle(hdc, start_x, start_y, start_x + width, start_y + height);
-
-			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
-			DeleteObject(hBrush);
-			DeleteObject(hPen);
-			
-			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
 		{
@@ -207,7 +154,7 @@ namespace Geometry
 	{
 		double side;
 	public:
-		Square (double side, SHAPE_TAKE_PARAMETRS) : Rectangle(side, side, SHAPE_GIVE_PARAMETRS)
+		Square(double side, SHAPE_TAKE_PARAMETRS) : Rectangle(side, side, SHAPE_GIVE_PARAMETRS)
 		{
 			set_side(side);
 		}
@@ -226,7 +173,7 @@ namespace Geometry
 	{
 		double radius;
 	public:
-		Circle(double radius, SHAPE_TAKE_PARAMETRS): Shape(SHAPE_GIVE_PARAMETRS)
+		Circle(double radius, SHAPE_TAKE_PARAMETRS) : Shape(SHAPE_GIVE_PARAMETRS)
 		{
 			set_radius(radius);
 		}
@@ -248,25 +195,7 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Получаем окно консоли
-			HDC hdc = GetDC(hwnd);			//2) Получаем контекст устройства (DC - Device Context) для окна консоли
-			// DC - это то начем мы будем рисовать
-			//3) Создадим инструменты, которыми мы будем рисовать
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Карандаш (Pen) рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);   //Кисть (Brush) рисует заливку фигуры
-
-			//4)Выберем созданные инструменты:
-			SelectObject(hdc, hPen);
-			SelectObject(hdc, hBrush);
-
-			//5) После того, как все необходимые инструменты созданы и выбраны, можно рисовать
-			::Ellipse(hdc, start_x, start_y, start_x + 2*radius, start_y + 2*radius);
-
-			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
-			DeleteObject(hBrush);
-			DeleteObject(hPen);
-
-			ReleaseDC(hwnd, hdc);
+			::Ellipse(hdc, start_x, start_y, start_x + 2 * radius, start_y + 2 * radius);
 		}
 
 	};
@@ -274,7 +203,7 @@ namespace Geometry
 	class Triangle : public Shape
 	{
 	public:
-		Triangle(SHAPE_TAKE_PARAMETRS) : Shape(SHAPE_GIVE_PARAMETRS){}
+		Triangle(SHAPE_TAKE_PARAMETRS) : Shape(SHAPE_GIVE_PARAMETRS) {}
 		virtual double get_height()const = 0;
 	};
 
@@ -309,29 +238,15 @@ namespace Geometry
 		}
 		void draw()const override
 		{
+
+			const POINT vertices[] =
 			{
-				HWND hwnd = GetConsoleWindow();
-				HDC hdc = GetDC(hwnd);	
-				
-				HPEN hPen = CreatePen(PS_SOLID, line_width, color); 
-				HBRUSH hBrush = CreateSolidBrush(color);   
+				{start_x, start_y + get_height()},
+				{start_x + side, start_y + get_height()},
+				{start_x + side / 2, start_y}
+			};
+			::Polygon(hdc, vertices, 3);
 
-				SelectObject(hdc, hPen);
-				SelectObject(hdc, hBrush);
-
-				const POINT vertices[] =
-				{
-					{start_x, start_y + get_height()},
-					{start_x + side, start_y + get_height()},
-					{start_x + side /2, start_y}
-				};
-				::Polygon(hdc, vertices, 3);
-
-				DeleteObject(hBrush);
-				DeleteObject(hPen);
-
-				ReleaseDC(hwnd, hdc);
-			}
 		}
 	};
 }
