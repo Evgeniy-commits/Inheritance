@@ -86,7 +86,28 @@ namespace Geometry
 		}
 		virtual double get_area()const = 0;
 		virtual double get_perimetr()const = 0;
-		virtual void draw()const = 0;
+		virtual void draw()const
+		{
+			HWND hwnd = GetConsoleWindow();  //1) Получаем окно консоли
+			HDC hdc = GetDC(hwnd);			//2) Получаем контекст устройства (DC - Device Context) для окна консоли
+			// DC - это то начем мы будем рисовать
+//3) Создадим инструменты, которыми мы будем рисовать
+			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Карандаш (Pen) рисует контур фигуры
+			HBRUSH hBrush = CreateSolidBrush(color);   //Кисть (Brush) рисует заливку фигуры
+
+			//4)Выберем созданные инструменты:
+			SelectObject(hdc, hPen);
+			SelectObject(hdc, hBrush);
+
+			//5) После того, как все необходимые инструменты созданы и выбраны, можно рисовать
+			::DrawFunction(hdc, start_x, start_y, start_x + width, start_y + height);
+
+			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
+			DeleteObject(hBrush);
+			DeleteObject(hPen);
+
+			ReleaseDC(hwnd, hdc);
+		}
 		virtual void info()const
 		{
 			cout << "Площадь фигуры: " << get_area() << endl;
@@ -94,50 +115,6 @@ namespace Geometry
 			draw();
 		}
 	};
-
-	/*class Square :public Shape
-	{
-		double side;
-	public:
-		Square(double side, SHAPE_TAKE_PARAMETRS) :Shape(SHAPE_GIVE_PARAMETRS)
-		{
-			set_side(side);
-		}
-		double get_side()const
-		{
-			return side;
-		}
-		void set_side(double side)
-		{
-			this->side = side;
-		}
-		double get_area()const override
-		{
-			return side * side;
-		}
-		double get_perimetr()const override
-		{
-			return 4 * side;
-		}
-		void draw()const override
-		{
-			for (int i = 0; i < side; i++)
-			{
-				for (int j = 0; j < side; j++)
-				{
-					cout << "* ";
-				}
-				cout << endl;
-			}
-			cout << endl;
-		}
-		void info()const override
-		{
-			cout << typeid(*this).name() << endl;
-			cout << "Длина стороны квадрата: " << get_side() << endl;
-			Shape::info();
-		}
-	};*/
 
 	class Rectangle : public Shape
 	{
@@ -175,25 +152,7 @@ namespace Geometry
 		}
 		void draw()const override
 		{
-			HWND hwnd = GetConsoleWindow();  //1) Получаем окно консоли
-			HDC hdc = GetDC(hwnd);			//2) Получаем контекст устройства (DC - Device Context) для окна консоли
-											// DC - это то начем мы будем рисовать
-			//3) Создадим инструменты, которыми мы будем рисовать
-			HPEN hPen = CreatePen(PS_SOLID, line_width, color); //Карандаш (Pen) рисует контур фигуры
-			HBRUSH hBrush = CreateSolidBrush(color);   //Кисть (Brush) рисует заливку фигуры
 			
-			//4)Выберем созданные инструменты:
-			SelectObject(hdc, hPen);
-			SelectObject(hdc, hBrush);
-
-			//5) После того, как все необходимые инструменты созданы и выбраны, можно рисовать
-			::Rectangle(hdc, start_x, start_y, start_x + width, start_y + height);
-
-			//6) hdc, hPen, hBrush занимают ресурсы, а ресурсы нужно освобождать
-			DeleteObject(hBrush);
-			DeleteObject(hPen);
-			
-			ReleaseDC(hwnd, hdc);
 		}
 		void info()const override
 		{
