@@ -242,7 +242,113 @@ namespace Geometry
 				{start_x + side / 2, start_y}
 			};
 			::Polygon(hdc, vertices, 3);
+		}
+	};
+	class RectangularTriangle : public Triangle
+	{
+		double side;
+		double height;
+	public:
+		RectangularTriangle(double side, double height, SHAPE_TAKE_PARAMETRS) : Triangle(SHAPE_GIVE_PARAMETRS)
+		{
+			set_side(side);
+			set_height(height);
+		}
+		void set_side(double side)
+		{
+			this->side = filter_size(side);
+		}
+		void set_height(double height)
+		{
+			this->height = filter_size(height);
+		}
+		double get_side() const
+		{
+			return side;
+		}
+		double get_height() const override
+		{
+			return height;
+		}
+		double get_area()const override
+		{
+			return side * get_height() / 2;
+		}
+		double get_perimetr()const override
+		{
+			return side + height + sqrt(pow(side, 2) + pow(height, 2));
+		}
+		void draw()const override
+		{
 
+			const POINT vertices[] =
+			{
+				{start_x, start_y + get_height()},
+				{start_x + side, start_y + get_height()},
+				{start_x, start_y}
+			};
+			::Polygon(hdc, vertices, 3);
+		}
+	};
+	class DefaultTriangle : public Triangle
+	{
+		double side_a;
+		double side_b;
+		double side_c;
+	public:
+		DefaultTriangle(double side_a,double side_b,double side_c,  SHAPE_TAKE_PARAMETRS) : Triangle(SHAPE_GIVE_PARAMETRS)
+		{
+			set_side_a(side_a);
+			set_side_b(side_b);
+			set_side_c(side_c);
+			
+		}
+		void set_side_a(double side_a)
+		{
+			this->side_a = filter_size(side_a);
+		}
+		void set_side_b(double side_b)
+		{
+			this->side_b = filter_size(side_b);
+		}
+		void set_side_c(double side_c)
+		{
+			this->side_c = filter_size(side_c);
+		}
+		double get_side_a() const
+		{
+			return side_a;
+		}
+		double get_side_b() const
+		{
+			return side_b;
+		}
+		double get_side_c() const
+		{
+			return side_c;
+		}
+		double get_height() const override
+		{
+			return 2 * get_area() / side_a;
+		}
+		double get_area()const override
+		{
+			return sqrt(get_perimetr()/2 * (get_perimetr()/2 - side_a)*(get_perimetr()/2 - side_b)*(get_perimetr()/2 - side_c));
+		}
+		double get_perimetr()const override
+		{
+			return side_a + side_b + side_c;
+		}
+		void draw()const override
+		{
+
+			const POINT vertices[] =
+			{
+				{start_x, start_y + get_height()},
+				{start_x + side_a, start_y + get_height()},
+				{start_x + sqrt(pow(side_c, 2) - pow(get_height(), 2)), start_y}
+			};
+			::Polygon(hdc, vertices, 3);
 		}
 	};
 }
@@ -266,11 +372,20 @@ void main()
 	cout << "\n-----------------------------------------\n" << endl;
 	Geometry::EquilateralTriangle e_triangle(100, 550, 350, 16, Geometry::Color::Green);
 	e_triangle.info();
+	cout << "\n-----------------------------------------\n" << endl;
+	Geometry::RectangularTriangle recttriangle(100, 150, 300, 300, 16, Geometry::Color::Blue);
+	recttriangle.info();
+	cout << "\n-----------------------------------------\n" << endl;
+	Geometry::DefaultTriangle deftriangle(120, 105, 50, 400, 350, 16, Geometry::Color::White);
+	deftriangle.info();
+	cout << "\n-----------------------------------------\n" << endl;
 	while (true)
 	{
 		square.draw();
 		rectangle.draw();
 		circle.draw();
 		e_triangle.draw();
+		recttriangle.draw();
+		deftriangle.draw();
 	}
 }
